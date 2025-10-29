@@ -995,7 +995,7 @@ const Editor = () => {
         </div>
 
         {/* Right Panel - Preview */}
-        <div className="flex-1 bg-white p-8 flex flex-col items-start sticky top-0 h-screen overflow-hidden">
+        <div className="flex-1 bg-white p-8 flex flex-col items-center sticky top-0 h-screen overflow-hidden">
           <div
             className="w-full max-w-md rounded-[3rem] shadow-2xl overflow-hidden" 
             style={{ height: '600px', backgroundColor: backgroundColor }}
