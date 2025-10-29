@@ -552,7 +552,7 @@ const Editor = () => {
 
       <div className="flex-1 flex">
         {/* Left Panel - Editor */}
-        <div className="flex-1 overflow-y-auto p-6 pr-3">
+        <div className="w-[70%] overflow-y-auto p-6 pr-3">
           <div className="max-w-xl mx-auto space-y-6">
             {/* Profile Section */}
             <div className="bg-card border border-border rounded-2xl p-6">
@@ -995,7 +995,7 @@ const Editor = () => {
         </div>
 
         {/* Right Panel - Preview */}
-        <div className="flex-1 bg-white p-8 pl-3 flex flex-col items-center sticky top-0 h-screen overflow-hidden">
+        <div className="w-[30%] bg-white p-8 pl-3 flex flex-col items-center sticky top-0 h-screen overflow-hidden">
           <div
             className="w-full max-w-md rounded-[3rem] shadow-2xl overflow-hidden" 
             style={{ height: '600px', backgroundColor: backgroundColor }}
