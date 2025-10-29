@@ -534,10 +534,6 @@ const Editor = () => {
             {isSaving && (
               <span className="text-sm text-muted-foreground">Saving...</span>
             )}
-            <Button variant="ghost" size="sm" onClick={handlePreview}>
-              <Eye className="h-4 w-4 mr-2" />
-              Preview
-            </Button>
             {profile.username && (
               <a 
                 href={`/${profile.username}`}
@@ -556,7 +552,7 @@ const Editor = () => {
 
       <div className="flex-1 flex">
         {/* Left Panel - Editor */}
-        <div className="flex-1 overflow-y-auto p-6 border-r border-border">
+        <div className="flex-1 overflow-y-auto p-6">
           <div className="max-w-2xl mx-auto space-y-6">
             {/* Profile Section */}
             <div className="bg-card border border-border rounded-2xl p-6">
@@ -999,9 +995,8 @@ const Editor = () => {
         </div>
 
         {/* Right Panel - Preview */}
-        <div className="w-[480px] bg-white p-8 flex flex-col items-center sticky top-0 h-screen overflow-hidden">
-          <div className="text-sm text-muted-foreground mb-4">Live Preview</div>
-          <div 
+        <div className="w-[480px] bg-white p-8 flex flex-col justify-center sticky top-0 h-screen overflow-hidden">
+          <div
             className="w-full max-w-md rounded-[3rem] shadow-2xl overflow-hidden" 
             style={{ height: '600px', backgroundColor: backgroundColor }}
           >
