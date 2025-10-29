@@ -553,7 +553,7 @@ const Editor = () => {
       <div className="flex-1 flex">
         {/* Left Panel - Editor */}
         <div className="flex-1 overflow-y-auto p-6">
-          <div className="space-y-6">
+          <div className="max-w-xl mx-auto space-y-6">
             {/* Profile Section */}
             <div className="bg-card border border-border rounded-2xl p-6">
               <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
