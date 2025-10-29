@@ -123,35 +123,35 @@ export const SocialIconsDisplay: React.FC<SocialIconsDisplayProps> = ({
   }, [settingsOverride]);
 
   const fetchData = async () => {
-    // Fetch handles
-    const { data: handlesData } = await supabase
-      .from('social_handles')
-      .select('*')
-      .eq('profile_id', profileId)
-      .eq('is_visible', true)
-      .order('position', { ascending: true });
+    // Fetch handles and settings in parallel
+    const [handlesResult, profileResult] = await Promise.all([
+      supabase
+        .from('social_handles')
+        .select('*')
+        .eq('profile_id', profileId)
+        .eq('is_visible', true)
+        .order('position', { ascending: true }),
+      supabase
+        .from('profiles')
+        .select('social_icon_position, social_icon_style, social_icon_shape, social_icon_size, social_icon_spacing, social_icon_alignment, social_icon_hover, social_icon_color')
+        .eq('id', profileId)
+        .maybeSingle()
+    ]);
 
-    if (handlesData) {
-      setHandles(handlesData);
+    if (handlesResult.data) {
+      setHandles(handlesResult.data);
     }
 
-    // Fetch settings
-    const { data: profileData } = await supabase
-      .from('profiles')
-      .select('social_icon_position, social_icon_style, social_icon_shape, social_icon_size, social_icon_spacing, social_icon_alignment, social_icon_hover, social_icon_color')
-      .eq('id', profileId)
-      .single();
-
-    if (profileData) {
+    if (profileResult.data) {
       setSettings({
-        position: profileData.social_icon_position || 'below',
-        style: profileData.social_icon_style || 'brand',
-        shape: profileData.social_icon_shape || 'circle',
-        size: profileData.social_icon_size || 32,
-        spacing: profileData.social_icon_spacing || 12,
-        alignment: profileData.social_icon_alignment || 'center',
-        hover: profileData.social_icon_hover || 'scale',
-        color: profileData.social_icon_color || '#000000',
+        position: profileResult.data.social_icon_position || 'below',
+        style: profileResult.data.social_icon_style || 'brand',
+        shape: profileResult.data.social_icon_shape || 'circle',
+        size: profileResult.data.social_icon_size || 32,
+        spacing: profileResult.data.social_icon_spacing || 12,
+        alignment: profileResult.data.social_icon_alignment || 'center',
+        hover: profileResult.data.social_icon_hover || 'scale',
+        color: profileResult.data.social_icon_color || '#000000',
       });
     }
   };

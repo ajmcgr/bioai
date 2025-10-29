@@ -104,24 +104,18 @@ const Profile = () => {
           setFontSize(row.font_size || 16);
           setFontWeight(row.font_weight || 'normal');
 
-          // Check if user has a paid subscription by reading from pro_status (optional)
-          try {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session?.user?.email) {
-              const { data: proData } = await supabase
-                .from('pro_status')
-                .select('plan')
-                .eq('email', session.user.email)
-                .maybeSingle();
-              setIsPaidUser(!!proData && proData.plan === 'pro');
-            }
-          } catch (error) {
-            console.error('Error checking subscription:', error);
-            setIsPaidUser(false);
-          }
+          // Check if this profile has a paid subscription (non-blocking)
+          supabase
+            .from('pro_status')
+            .select('plan')
+            .eq('email', row.email || '')
+            .maybeSingle()
+            .then(({ data }) => {
+              setIsPaidUser(!!data && data.plan === 'pro');
+            }, () => setIsPaidUser(false));
 
-          // Track profile view (only for public profiles, not previews)
-          await supabase
+          // Track profile view (non-blocking, fire-and-forget)
+          void supabase
             .from('profile_views')
             .insert({
               profile_id: row.id,
