@@ -31,9 +31,11 @@ const Profile = () => {
   const [fontWeight, setFontWeight] = useState<"normal" | "medium" | "semibold" | "bold">("normal");
   const [iconPreviewHandles, setIconPreviewHandles] = useState<any[] | null>(null);
   const [iconPreviewSettings, setIconPreviewSettings] = useState<any | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadProfile = async () => {
+      setIsLoading(true);
       if (isPreview) {
         // Load from localStorage for preview
         const previewData = localStorage.getItem('previewData');
@@ -54,6 +56,7 @@ const Profile = () => {
           setIconPreviewHandles(data.previewHandles || null);
           setIconPreviewSettings(data.previewSettings || null);
         }
+        setIsLoading(false);
       } else if (username) {
         // Load from Supabase by username for public profile
         try {
@@ -82,6 +85,7 @@ const Profile = () => {
 
           if (!row) {
             console.warn('[Profile] No profile found for username', username);
+            setIsLoading(false);
             return;
           }
 
@@ -122,8 +126,11 @@ const Profile = () => {
               user_agent: navigator.userAgent,
               referrer: document.referrer
             });
+
+          setIsLoading(false);
         } catch (error) {
           console.error('Error loading profile:', error);
+          setIsLoading(false);
         }
       }
     };
@@ -150,9 +157,37 @@ const Profile = () => {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div 
+        className="min-h-screen flex flex-col items-center justify-start md:justify-center md:p-6"
+        style={{ backgroundColor }}
+      >
+        <div className="w-full md:max-w-lg flex-shrink-0 md:mx-auto">
+          <div className="md:rounded-3xl p-8 md:shadow-2xl bg-card/50 backdrop-blur-sm animate-pulse">
+            {/* Avatar Skeleton */}
+            <div className="text-center mb-8">
+              <div className="h-24 w-24 mx-auto mb-4 rounded-full bg-muted/50" />
+              <div className="h-8 w-48 mx-auto mb-2 rounded-lg bg-muted/50" />
+              <div className="h-6 w-32 mx-auto mb-3 rounded-lg bg-muted/50" />
+              <div className="h-4 w-64 mx-auto rounded-lg bg-muted/50" />
+            </div>
+            
+            {/* Links Skeleton */}
+            <div className="space-y-3">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="h-14 w-full rounded-full bg-muted/50" />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div 
-      className="min-h-screen flex flex-col items-center justify-start md:justify-center md:p-6"
+      className="min-h-screen flex flex-col items-center justify-start md:justify-center md:p-6 animate-fade-in"
       style={{ backgroundColor }}
     >
       <div className="w-full md:max-w-lg flex-shrink-0 md:mx-auto">
