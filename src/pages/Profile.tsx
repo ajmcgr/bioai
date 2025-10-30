@@ -26,7 +26,7 @@ const Profile = () => {
   const [backgroundColor, setBackgroundColor] = useState("#ffffff");
   const [buttonStyle, setButtonStyle] = useState<"solid" | "glass" | "outline">("solid");
   const [buttonCorners, setButtonCorners] = useState<"square" | "round">("round");
-  const [isPaidUser, setIsPaidUser] = useState(false);
+  const [hideBranding, setHideBranding] = useState(false);
   const [fontSize, setFontSize] = useState(16);
   const [fontWeight, setFontWeight] = useState<"normal" | "medium" | "semibold" | "bold">("normal");
   const [iconPreviewHandles, setIconPreviewHandles] = useState<any[] | null>(null);
@@ -53,6 +53,7 @@ const Profile = () => {
           setFontSize(data.fontSize || 16);
           setFontWeight(data.fontWeight || 'normal');
           setProfileId(data.profileId || null);
+          setHideBranding(data.hideBranding || false);
           setIconPreviewHandles(data.previewHandles || null);
           setIconPreviewSettings(data.previewSettings || null);
         }
@@ -107,16 +108,7 @@ const Profile = () => {
           setButtonCorners(row.button_corners || 'round');
           setFontSize(row.font_size || 16);
           setFontWeight(row.font_weight || 'normal');
-
-          // Check if this profile has a paid subscription (non-blocking)
-          supabase
-            .from('pro_status')
-            .select('plan')
-            .eq('email', row.email || '')
-            .maybeSingle()
-            .then(({ data }) => {
-              setIsPaidUser(!!data && data.plan === 'pro');
-            }, () => setIsPaidUser(false));
+          setHideBranding(row.hide_branding || false);
 
           // Track profile view (non-blocking, fire-and-forget)
           void supabase
@@ -325,7 +317,7 @@ const Profile = () => {
         </div>
 
         {/* Footer - only show for free users */}
-        {!isPaidUser && (
+        {!hideBranding && (
           <div className="text-center mt-6">
             <a
               href="/"
