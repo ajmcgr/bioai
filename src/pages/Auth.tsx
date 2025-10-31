@@ -14,7 +14,6 @@ const Auth = () => {
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -38,23 +37,14 @@ const Auth = () => {
           password,
           options: {
             emailRedirectTo: `${window.location.origin}/editor`,
-            data: {
-              full_name: name,
-            },
           },
         });
         if (error) throw error;
 
         // Sync contact to HubSpot in the background
-        const nameParts = name.split(' ');
-        const firstName = nameParts[0] || '';
-        const lastName = nameParts.slice(1).join(' ') || '';
-        
         supabase.functions.invoke('sync-hubspot-contact', {
           body: { 
-            email, 
-            firstName,
-            lastName
+            email
           }
         }).catch(err => {
           console.error('HubSpot sync failed:', err);
@@ -199,18 +189,6 @@ const Auth = () => {
               </div>
 
               <form onSubmit={handleEmailAuth} className="space-y-4">
-                {!isLogin && (
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Full Name</Label>
-                    <Input 
-                      id="name" 
-                      placeholder="John Doe" 
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      required={!isLogin}
-                    />
-                  </div>
-                )}
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <Input 
