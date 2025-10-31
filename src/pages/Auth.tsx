@@ -37,7 +37,7 @@ const Auth = () => {
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/dashboard`,
+            emailRedirectTo: `${window.location.origin}/editor`,
             data: {
               full_name: name,
             },
@@ -63,9 +63,9 @@ const Auth = () => {
 
         toast({
           title: "Account created!",
-          description: "Redirecting to dashboard...",
+          description: "Redirecting to editor...",
         });
-        navigate("/dashboard");
+        navigate("/editor");
       }
     } catch (error: any) {
       toast({
@@ -83,7 +83,7 @@ const Auth = () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/dashboard`,
+          redirectTo: `${window.location.origin}/editor`,
         },
       });
       if (error) throw error;
