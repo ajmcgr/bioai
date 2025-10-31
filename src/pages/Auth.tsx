@@ -132,12 +132,12 @@ const Auth = () => {
         <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-2">
-            {isForgotPassword ? "Reset Password" : isLogin ? "Welcome back" : "Create your account"}
+            {isForgotPassword ? "Reset Password" : isLogin ? "Welcome back" : "Welcome!"}
           </h1>
           <p className="text-muted-foreground">
             {isForgotPassword 
               ? "Enter your email to receive a password reset link" 
-              : isLogin ? "Sign in to continue to your dashboard" : "Start building your bio page in 60 seconds"}
+              : isLogin ? "Sign in to continue to your dashboard" : "Sign up to create your link-in-bio page"}
           </p>
         </div>
 
