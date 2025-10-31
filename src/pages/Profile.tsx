@@ -32,118 +32,98 @@ const Profile = () => {
   const [iconPreviewHandles, setIconPreviewHandles] = useState<any[] | null>(null);
   const [iconPreviewSettings, setIconPreviewSettings] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadProfile = async () => {
       setIsLoading(true);
-      setLoadError(null);
-
-      // Safety timeout so UI never stays in skeleton forever
-      const timeoutId = window.setTimeout(() => {
+      if (isPreview) {
+        // Load from localStorage for preview
+        const previewData = localStorage.getItem('previewData');
+        if (previewData) {
+          const data = JSON.parse(previewData);
+          setProfile(data.profile);
+          setLinks(data.links);
+          setWallpaperUrl(data.wallpaperUrl);
+          setTextColor(data.textColor);
+          setButtonColor(data.buttonColor);
+          setButtonTextColor(data.buttonTextColor || '#ffffff');
+          setBackgroundColor(data.backgroundColor);
+          setButtonStyle(data.buttonStyle || 'solid');
+          setButtonCorners(data.buttonCorners || 'round');
+          setFontSize(data.fontSize || 16);
+          setFontWeight(data.fontWeight || 'normal');
+          setProfileId(data.profileId || null);
+          setHideBranding(data.hideBranding || false);
+          setIconPreviewHandles(data.previewHandles || null);
+          setIconPreviewSettings(data.previewSettings || null);
+        }
         setIsLoading(false);
-        setLoadError('This profile is taking longer than usual to load. Please try again.');
-      }, 12000);
-
-      try {
-        if (isPreview) {
-          // Load from localStorage for preview
-          const previewData = localStorage.getItem('previewData');
-          if (previewData) {
-            const data = JSON.parse(previewData);
-            setProfile(data.profile);
-            setLinks(data.links);
-            setWallpaperUrl(data.wallpaperUrl);
-            setTextColor(data.textColor);
-            setButtonColor(data.buttonColor);
-            setButtonTextColor(data.buttonTextColor || '#ffffff');
-            setBackgroundColor(data.backgroundColor);
-            setButtonStyle(data.buttonStyle || 'solid');
-            setButtonCorners(data.buttonCorners || 'round');
-            setFontSize(data.fontSize || 16);
-            setFontWeight(data.fontWeight || 'normal');
-            setProfileId(data.profileId || null);
-            setHideBranding(data.hideBranding || false);
-            setIconPreviewHandles(data.previewHandles || null);
-            setIconPreviewSettings(data.previewSettings || null);
-          }
-          return;
-        }
-
-        if (!username) return;
-
-        // 1) Try via public view
-        const q1 = await supabase
-          .from('profiles_api')
-          .select('*')
-          .ilike('username', username)
-          .maybeSingle();
-
-        let row: any = q1.data || null;
-        if (q1.error) {
-          console.warn('[Profile] profiles_api read error', q1.error);
-        }
-
-        // 2) If view failed or empty, try base table directly
-        if ((!row && !q1.error) || q1?.error) {
-          const q2 = await supabase
-            .from('profiles')
+      } else if (username) {
+        // Load from Supabase by username for public profile
+        try {
+          // Try profiles_api first (case-insensitive username lookup)
+          const q1 = await supabase
+            .from('profiles_api')
             .select('*')
             .ilike('username', username)
-            .limit(1);
+            .maybeSingle();
 
-          if (q2.error) {
-            console.warn('[Profile] profiles base read error', q2.error);
+          let row: any = q1.data || null;
+          if (q1.error) {
+            console.warn('[Profile] profiles_api read error', q1.error);
           }
-          row = q2.data?.[0] || null;
-        }
 
-        if (!row) {
-          console.warn('[Profile] No profile found for username', username);
-          setLoadError('Profile not found');
-          return;
-        }
-
-        setProfileId(row.id);
-        setProfile({
-          name: row.full_name || row.username || '',
-          username: row.username || '',
-          bio: row.bio || '',
-          avatarUrl: row.avatar_url || '',
-          font: row.font || 'font-sans',
-        });
-        setLinks(row.links || []);
-        setWallpaperUrl(row.wallpaper_url || '');
-        setTextColor(row.text_color || '#000000');
-        setButtonColor(row.button_color || '#000000');
-        setButtonTextColor(row.button_text_color || '#ffffff');
-        setBackgroundColor(row.background_color || '#ffffff');
-        setButtonStyle(row.button_style || 'solid');
-        setButtonCorners(row.button_corners || 'round');
-        setFontSize(row.font_size || 16);
-        setFontWeight(row.font_weight || 'normal');
-        setHideBranding(row.hide_branding || false);
-
-        // Track profile view (non-blocking, fire-and-forget)
-        ;(async () => {
-          try {
-            await supabase
-              .from('profile_views')
-              .insert({
-                profile_id: row.id,
-                user_agent: navigator.userAgent,
-                referrer: document.referrer
-              });
-          } catch (e) {
-            console.warn('[Profile] view track error', e);
+          // Fallback: non-single fetch if maybeSingle fails to coerce
+          if (!row && !q1.error) {
+            const q2 = await supabase
+              .from('profiles_api')
+              .select('*')
+              .ilike('username', username)
+              .limit(1);
+            if (q2.error) console.warn('[Profile] profiles_api list error', q2.error);
+            row = q2.data?.[0] || null;
           }
-        })();
-      } catch (error) {
-        console.error('Error loading profile:', error);
-        setLoadError('Failed to load profile');
-      } finally {
-        window.clearTimeout(timeoutId);
-        setIsLoading(false);
+
+          if (!row) {
+            console.warn('[Profile] No profile found for username', username);
+            setIsLoading(false);
+            return;
+          }
+
+          setProfileId(row.id);
+          setProfile({
+            name: row.full_name || row.username || '',
+            username: row.username || '',
+            bio: row.bio || '',
+            avatarUrl: row.avatar_url || '',
+            font: row.font || 'font-sans',
+          });
+          setLinks(row.links || []);
+          setWallpaperUrl(row.wallpaper_url || '');
+          setTextColor(row.text_color || '#000000');
+          setButtonColor(row.button_color || '#000000');
+          setButtonTextColor(row.button_text_color || '#ffffff');
+          setBackgroundColor(row.background_color || '#ffffff');
+          setButtonStyle(row.button_style || 'solid');
+          setButtonCorners(row.button_corners || 'round');
+          setFontSize(row.font_size || 16);
+          setFontWeight(row.font_weight || 'normal');
+          setHideBranding(row.hide_branding || false);
+
+          // Track profile view (non-blocking, fire-and-forget)
+          void supabase
+            .from('profile_views')
+            .insert({
+              profile_id: row.id,
+              user_agent: navigator.userAgent,
+              referrer: document.referrer
+            });
+
+          setIsLoading(false);
+        } catch (error) {
+          console.error('Error loading profile:', error);
+          setIsLoading(false);
+        }
       }
     };
 
@@ -192,17 +172,6 @@ const Profile = () => {
               ))}
             </div>
           </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (loadError) {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-6" style={{ backgroundColor }}>
-        <div className="text-center text-muted-foreground">
-          <p className="mb-2">{loadError}</p>
-          <p className="text-sm">If this persists, please try again later.</p>
         </div>
       </div>
     );
