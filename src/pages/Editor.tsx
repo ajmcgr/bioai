@@ -946,9 +946,9 @@ const Editor = () => {
                           <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
                             <LinkIcon className="h-5 w-5 text-primary" />
                           </div>
-                          <div className="flex-1">
+                          <div className="flex-1 min-w-0">
                             <p className="font-medium">{link.title}</p>
-                            <p className="text-sm text-muted-foreground">{link.url}</p>
+                            <p className="text-sm text-muted-foreground truncate">{link.url}</p>
                           </div>
                           <Button
                             variant="ghost"
