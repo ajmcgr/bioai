@@ -24,13 +24,22 @@ const Auth = () => {
 
     try {
       if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({
+        const { data, error } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
         if (error) throw error;
+        
+        // Check if user has existing profiles
+        const { data: profiles } = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('user_id', data.user.id)
+          .limit(1);
+        
+        const hasProfiles = profiles && profiles.length > 0;
         toast({ title: "Welcome back!" });
-        navigate("/dashboard");
+        navigate(hasProfiles ? "/dashboard" : "/editor");
       } else {
         const { error } = await supabase.auth.signUp({
           email,
@@ -73,7 +82,7 @@ const Auth = () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/editor`,
+          redirectTo: `${window.location.origin}/auth-callback`,
         },
       });
       if (error) throw error;
