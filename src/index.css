@@ -41,8 +41,11 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 220 13% 13%;
 
-    --primary: 209 84% 46%;
+    --primary: 100 61% 59%;
     --primary-foreground: 0 0% 100%;
+
+    --button-primary: 209 84% 46%;
+    --button-primary-foreground: 0 0% 100%;
 
     --secondary: 220 13% 97%;
     --secondary-foreground: 220 13% 13%;
@@ -89,8 +92,11 @@ All colors MUST be HSL.
     --popover: 220 13% 11%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 209 84% 46%;
+    --primary: 100 61% 59%;
     --primary-foreground: 0 0% 100%;
+
+    --button-primary: 209 84% 46%;
+    --button-primary-foreground: 0 0% 100%;
 
     --secondary: 220 13% 15%;
     --secondary-foreground: 0 0% 98%;
