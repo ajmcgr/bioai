@@ -177,6 +177,7 @@ const Landing = () => {
                 }
               }}
               buttonText="Get Started"
+              isLoggedOut={!user}
             />
             <PricingCard
               name="Pro"
@@ -203,11 +204,13 @@ const Landing = () => {
                   }
                 }}
                 buttonText={
+                  !user ? "Get Started" :
                   subscribed && plan === 'pro'
                     ? "Manage"
                     : "Upgrade"
                 }
                 isCurrentPlan={subscribed && plan === 'pro'}
+                isLoggedOut={!user}
             />
             <PricingCard
               name="Business"
@@ -234,11 +237,13 @@ const Landing = () => {
                   }
                 }}
                 buttonText={
+                  !user ? "Get Started" :
                   subscribed && plan !== 'pro'
                     ? "Manage"
                     : "Upgrade"
                 }
                 isCurrentPlan={subscribed && plan !== 'pro'}
+                isLoggedOut={!user}
              />
           </div>
         </div>
@@ -337,7 +342,7 @@ const ThemeCard = ({ name, bgColor, bgGradient, bgImage }: { name: string; bgCol
   );
 };
 
-const PricingCard = ({ name, price, description, features, highlighted, onSelect, buttonText, isCurrentPlan }: {
+const PricingCard = ({ name, price, description, features, highlighted, onSelect, buttonText, isCurrentPlan, isLoggedOut }: {
   name: string;
   price: string;
   description: string;
@@ -346,6 +351,7 @@ const PricingCard = ({ name, price, description, features, highlighted, onSelect
   onSelect: () => void;
   buttonText: string;
   isCurrentPlan?: boolean;
+  isLoggedOut?: boolean;
 }) => (
   <div className={`bg-card border rounded-2xl p-8 relative ${
     highlighted ? 'border-primary shadow-xl scale-105' : 
@@ -369,7 +375,7 @@ const PricingCard = ({ name, price, description, features, highlighted, onSelect
     <p className="text-muted-foreground mb-6">{description}</p>
     <Button 
       className="w-full mb-6" 
-      variant={highlighted && !isCurrentPlan ? "default" : "outline"}
+      variant={isLoggedOut || (highlighted && !isCurrentPlan) ? "default" : "outline"}
       onClick={onSelect}
     >
       {buttonText}
