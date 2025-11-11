@@ -46,6 +46,7 @@ All colors MUST be HSL.
 
     --button-primary: 209 84% 46%;
     --button-primary-foreground: 0 0% 100%;
+    --button-primary-hover: 217 60% 50%;
 
     --secondary: 220 13% 97%;
     --secondary-foreground: 220 13% 13%;
@@ -97,6 +98,7 @@ All colors MUST be HSL.
 
     --button-primary: 209 84% 46%;
     --button-primary-foreground: 0 0% 100%;
+    --button-primary-hover: 217 60% 50%;
 
     --secondary: 220 13% 15%;
     --secondary-foreground: 0 0% 98%;
