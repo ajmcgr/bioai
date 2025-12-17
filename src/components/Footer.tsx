@@ -54,7 +54,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="pt-8 border-t border-border text-center text-sm text-muted-foreground">
-          Copyright © 2025 Works App, Inc. Built with ♥️ by <a href="https://works.xyz/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Works</a>.
+          Copyright © 2025 Works App, Inc. Built with 🫶🏻 by <a href="https://works.xyz/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Works</a>.
         </div>
       </div>
     </footer>
