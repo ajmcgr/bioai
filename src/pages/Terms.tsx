@@ -24,7 +24,7 @@ const Terms = () => {
             <ul className="list-disc pl-6 mb-4 space-y-2">
               <li><strong>Account</strong> means a unique account created for You to access our Service or parts of our Service.</li>
               <li><strong>Country</strong> refers to: The United States of America</li>
-              <li><strong>Company</strong> (referred to as either "the Company", "We", "Us" or "Our" in this Agreement) refers to Works App, Inc. 651 N Broad St, Suite 201, Middletown, DE 19709 US.</li>
+              <li><strong>Company</strong> (referred to as either "the Company", "We", "Us" or "Our" in this Agreement) refers to Works App, Inc. 447 Sutter St, Ste 405 #3, San Francisco, CA 94108.</li>
               <li><strong>Content</strong> refers to content such as text, images, or other information that can be posted, uploaded, linked to or otherwise made available by You, regardless of the form of that content.</li>
               <li><strong>Device</strong> means any device that can access the Service such as a computer, a cellphone or a digital tablet.</li>
               <li><strong>Service</strong> refers to the Website.</li>
